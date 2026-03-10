@@ -1,6 +1,7 @@
 name: Build EXE
 
-on: [push]
+on:
+  push:
 
 jobs:
   build:
@@ -9,21 +10,25 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v4
 
-    - name: Install Python
-      uses: actions/setup-python@v4
+    - name: Setup Python
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version: "3.11"
 
-    - name: Install PyInstaller
-      run: pip install pyinstaller
+    - name: Install Dependencies
+      run: |
+        pip install pyinstaller
+        if exist requirements.txt pip install -r requirements.txt
 
     - name: Build EXE
-      run: pyinstaller --onefile --name Armageddon main_v2.py
+      run: |
+        pyinstaller --onefile --clean --name Armageddon main_v2.py
 
     - name: Upload EXE
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Armageddon
         path: dist/Armageddon.exe
